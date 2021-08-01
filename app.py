@@ -13,7 +13,7 @@ df = pd.read_csv('athlete_events.csv')
 region_df = pd.read_csv('noc_regions.csv')
 
 df = preprocessor.preprocess(df, region_df)
-st.sidebar.title('Olympic Analysis')
+st.sidebar.title('Olympics Analysis')
 st.sidebar.image('https://cdn.britannica.com/44/190944-131-7D082864/Silhouette-hand-sport-torch-flag-rings-Olympic-February-3-2015.jpg')
 user_menue = st.sidebar.radio(
     'Chose an Option',
@@ -121,19 +121,21 @@ if user_menue == 'Country wise Analysis':
     st.title(selected_country + ' Medals Over Time')
     st.plotly_chart(fig)
 
+    st.title(selected_country + ' excels in the following sports')
     country_heatmap = helper.country_event_heatmap(df, selected_country)
     fig, ax = plt.subplots(figsize = (20, 20))
     ax = sns.heatmap(country_heatmap, annot = True)
-    st.title(selected_country + ' excels in the following sports')
     st.pyplot(fig)
 
-    top10_df = helper.most_succesfull_countrywise(df, selected_country)
     st.title('Top 10 most succesfull Athletes of ' + selected_country)
+    top10_df = helper.most_succesfull_countrywise(df, selected_country)
     st.table(top10_df)
 
 
 
 if user_menue == 'Athlete wise Analysis':
+    st.title('Age Distribution')
+
     athlete_df = df.drop_duplicates(subset = ['Name', 'region'])
 
     x1 = athlete_df['Age'].dropna()
@@ -144,7 +146,6 @@ if user_menue == 'Athlete wise Analysis':
     fig = ff.create_distplot([x1, x2, x3, x4],['Overall Age', 'Gold Medalist', 'Silver Medalist', 'Bronze Medalist'],
                     show_hist = False,show_rug = False)
     fig.layout.update({'xaxis':{'title': 'Age'}})
-    st.title('Age Distribution')
     fig.update_layout(autosize = False, width = 1000, height = 590)
     st.plotly_chart(fig)
 
